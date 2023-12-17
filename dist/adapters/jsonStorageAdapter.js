@@ -45,6 +45,10 @@ class JsonStorageAdapter {
     getAllTasks() {
         return this.readData();
     }
+    getTaskById(id) {
+        const tasks = this.readData();
+        return tasks.find((task) => task.id === id);
+    }
     saveTask(task) {
         const tasks = this.readData();
         tasks.push(task);

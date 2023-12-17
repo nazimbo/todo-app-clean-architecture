@@ -26,6 +26,11 @@ export class JsonStorageAdapter {
     return this.readData();
   }
 
+  getTaskById(id: string): Task | undefined {
+    const tasks = this.readData();
+    return tasks.find((task) => task.id === id);
+  }
+
   saveTask(task: Task): void {
     const tasks = this.readData();
     tasks.push(task);

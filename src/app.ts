@@ -14,13 +14,11 @@ app.use(express.json());
 
 const createTaskUseCase: CreateTask = {
   execute(input: CreateTaskInput): CreateTaskOutput {
-    // Validate the due date format using a regular expression
     const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
     if (!dateRegex.test(input.dueDate)) {
       throw new Error("Invalid due date format. Please use DD-MM-YYYY.");
     }
 
-    // Convert the due date to a Date object to further validate it
     const [day, month, year] = input.dueDate.split("-").map(Number);
     const dueDate = new Date(year, month - 1, day);
 
@@ -28,7 +26,6 @@ const createTaskUseCase: CreateTask = {
       throw new Error("Invalid due date. Please provide a valid date.");
     }
 
-    // Continue with task creation if date validation passes
     const task = new Task(Date.now().toString(), input.title, input.description, input.dueDate, false);
     jsonStorageAdapter.saveTask(task);
     return { task };
@@ -37,8 +34,12 @@ const createTaskUseCase: CreateTask = {
 
 app.post("/tasks", (req, res) => {
   const input: CreateTaskInput = req.body;
-  const output = createTaskUseCase.execute(input);
-  res.json(output.task);
+  try {
+    const output = createTaskUseCase.execute(input);
+    res.json(output.task);
+  } catch (error: any) {
+    res.status(400).send(error.message);
+  }
 });
 
 app.get("/tasks", (req, res) => {

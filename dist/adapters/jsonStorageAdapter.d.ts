@@ -5,6 +5,7 @@ export declare class JsonStorageAdapter {
     private readData;
     private writeData;
     getAllTasks(): Task[];
+    getTaskById(id: string): Task | undefined;
     saveTask(task: Task): void;
     updateTask(task: Task): void;
     deleteTask(id: string): void;
